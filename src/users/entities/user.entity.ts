@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 
 export class UserEntity implements Users {
-  constructor(partial: Partial<UserEntity> | null) {
+  constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);
   }
   @ApiProperty()
