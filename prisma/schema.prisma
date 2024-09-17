@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id             String           @id @default(uuid())
+  name           String
+  password       String
+  email          String           @unique
+  roles          Role[]           @default([USER])
+  registeredAt   DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  favoriteMovies FavoriteMovies[]
+}
+
+model Movies {
+  id          String           @id @default(uuid())
+  name        String
+  description String           @db.VarChar(500)
+  posterUrl   String           @db.VarChar(300)
+  addedAt     DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  inFavorite  FavoriteMovies[]
+}
+
+model FavoriteMovies {
+  movie   Movies @relation(fields: [movieId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  movieId String
+  user    Users  @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId  String
+
+  @@id([movieId, userId])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
