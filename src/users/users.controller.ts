@@ -13,6 +13,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { UserData } from './users-data.decorator';
+import { Auth } from 'src/auth/auth.decorator';
 
 @Controller('users')
 @ApiTags('Users')
@@ -26,6 +27,7 @@ export class UsersController {
   }
 
   @Get()
+  @Auth('ADMIN')
   @ApiOkResponse({ type: UserEntity, isArray: true })
   async findAll() {
     const users = await this.usersService.findAll();
@@ -33,18 +35,24 @@ export class UsersController {
   }
 
   @Get('self')
+  @Auth()
   @ApiOkResponse({ type: UserEntity })
   async getSelf(@UserData('id') id: string) {
     return new UserEntity(await this.usersService.findOne(id));
   }
 
   @Get(':id')
+  @Auth('ADMIN')
   async findOne(@Param('id') id: string) {
     return new UserEntity(await this.usersService.findOne(id));
   }
 
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @Patch()
+  @Auth()
+  async update(
+    @UserData('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return new UserEntity(await this.usersService.update(id, updateUserDto));
   }
 

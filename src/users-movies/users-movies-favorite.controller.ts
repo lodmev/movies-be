@@ -3,8 +3,10 @@ import { UsersFavoriteMoviesService } from './users-movies-favorite.service';
 import { CreateUsersMovieFavoriteDto } from './dto/create-users-movie.dto';
 import { Auth } from 'src/auth/auth.decorator';
 import { UserData } from '../users/users-data.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('users/movies/favorite')
+@ApiTags('Users favorite movies')
 export class UsersMoviesFavoriteController {
   constructor(
     private readonly usersMoviesService: UsersFavoriteMoviesService,
