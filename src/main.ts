@@ -6,7 +6,7 @@ import 'dotenv/config';
 
 async function bootstrap() {
   const PORT = Number(process.env.PORT) || 3000;
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
