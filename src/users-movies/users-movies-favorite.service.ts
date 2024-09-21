@@ -12,16 +12,21 @@ export class UsersFavoriteMoviesService {
       },
       update: {},
       create: { userId: id, movieId: createUsersMovieDto.movieId },
+      select: { movieId: true },
     });
   }
 
   findAll(id: string) {
-    return this.prisma.favoriteMovies.findMany({ where: { userId: id } });
+    return this.prisma.favoriteMovies.findMany({
+      where: { userId: id },
+      select: { movieId: true },
+    });
   }
 
   remove(userId: string, movieId: string) {
     return this.prisma.favoriteMovies.delete({
       where: { movieId_userId: { userId: userId, movieId: movieId } },
+      select: { movieId: true },
     });
   }
 }

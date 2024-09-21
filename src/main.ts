@@ -13,11 +13,11 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Movies service')
-    .setVersion('0.1.0')
+    .setVersion('0.1.2')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/ui', app, document);
+  SwaggerModule.setup('ui', app, document);
   await app.listen(PORT, () => console.log(`server start on port ${PORT}`));
 }
 bootstrap();

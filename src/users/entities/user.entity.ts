@@ -1,4 +1,4 @@
-import { Role, Users } from '@prisma/client';
+import { Role, Users, FavoriteMovies } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 
@@ -17,6 +17,8 @@ export class UserEntity implements Users {
   @ApiProperty()
   updatedAt: Date;
   roles: Role[];
+  @ApiProperty()
+  favoriteMovies: Pick<FavoriteMovies, 'movieId'>[];
   @Exclude()
   password: string;
 }
