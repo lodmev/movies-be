@@ -24,7 +24,14 @@ export class UsersService {
   }
 
   findOne(id: string) {
-    return this.prisma.users.findUnique({ where: { id } });
+    return this.prisma.users.findUnique({
+      where: { id },
+      include: {
+        favoriteMovies: {
+          select: { movieId: true },
+        },
+      },
+    });
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
