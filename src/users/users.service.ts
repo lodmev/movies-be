@@ -4,19 +4,34 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { AuthService } from 'src/auth/auth.service';
+import { FavoriteMovies, Users } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private prisma: PrismaService,
+    private readonly prisma: PrismaService,
     private readonly config: ConfigService,
+    private readonly authService: AuthService,
   ) {}
   async create(createUserDto: CreateUserDto) {
+    const plainPassword = createUserDto.password;
     const hashPassword = await bcrypt.hash(
-      createUserDto.password,
-      this.config.get('ROUND_OF_HASHING'),
+      plainPassword,
+      Number(this.config.get('ROUND_OF_HASHING')),
     );
-    return this.prisma.users.create({ data: createUserDto });
+    createUserDto.password = hashPassword;
+    const newUser: Users & {
+      token?: string;
+      favoriteMovies?: FavoriteMovies[];
+    } = await this.prisma.users.create({ data: createUserDto });
+    const { accessToken } = await this.authService.login(
+      createUserDto.email,
+      plainPassword,
+    );
+    newUser.token = accessToken;
+    newUser.favoriteMovies = [];
+    return newUser;
   }
 
   findAll() {

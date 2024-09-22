@@ -18,6 +18,8 @@ export class UserEntity implements Users {
   updatedAt: Date;
   roles: Role[];
   @ApiProperty()
+  token?: string;
+  @ApiProperty()
   favoriteMovies: Pick<FavoriteMovies, 'movieId'>[];
   @Exclude()
   password: string;

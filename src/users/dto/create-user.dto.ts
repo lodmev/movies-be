@@ -18,5 +18,5 @@ export class CreateUserDto {
 
   @IsOptional()
   @ApiProperty({ required: false })
-  role: Role[] | undefined;
+  roles: Role[] | undefined;
 }
