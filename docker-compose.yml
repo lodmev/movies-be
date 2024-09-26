@@ -8,8 +8,6 @@ services:
       PGDATA: /data/postgres
     volumes:
       - pgdata:/data/postgres
-    ports:
-      - '127.0.0.1:5432:5432'
     networks:
       - postgres
     restart: unless-stopped
@@ -29,6 +27,17 @@ services:
     networks:
       - postgres
     restart: unless-stopped
+
+  app:
+    container_name: nest_app
+    depends_on:
+      - db
+    build:
+      dockerfile: nest.Dockerfile
+    ports:
+      - '5000:5000'
+    networks:
+      - postgres
 
 networks:
   postgres:
